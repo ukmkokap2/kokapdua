@@ -1,1 +1,47 @@
+name: Generate JSON from posts
 
+on:
+  push:
+    paths:
+      - "_posts/**"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Convert posts to JSON
+        run: |
+          mkdir -p data
+          echo "[" > data/berita.json
+          first=true
+          for file in _posts/*.md; do
+            title=$(grep '^title:' "$file" | sed 's/title: //')
+            date=$(grep '^date:' "$file" | sed 's/date: //')
+            image=$(grep '^image:' "$file" | sed 's/image: //')
+            content=$(sed -n '/---/,$p' "$file" | sed '1d')
+
+            if [ "$first" = true ]; then
+              first=false
+            else
+              echo "," >> data/berita.json
+            fi
+
+            echo "{" >> data/berita.json
+            echo "\"title\": \"$title\"," >> data/berita.json
+            echo "\"date\": \"$date\"," >> data/berita.json
+            echo "\"image\": \"$image\"," >> data/berita.json
+            echo "\"content\": \"$content\"" >> data/berita.json
+            echo "}" >> data/berita.json
+          done
+          echo "]" >> data/berita.json
+
+      - name: Commit JSON
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add data/berita.json
+          git commit -m "Update berita.json" || echo "No changes"
+          git push
