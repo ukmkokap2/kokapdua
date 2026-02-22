@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pelayanan UGD - Puskesmas Kokap II</title>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+body{
+background:
+radial-gradient(circle at 20% 10%, rgba(255,255,255,0.08), transparent 40%),
+radial-gradient(circle at 80% 0%, rgba(255,255,255,0.06), transparent 40%),
+linear-gradient(180deg,#0b0b12,#050508);
+font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
+color:white;
+}
+
+/* glass */
+.glass{
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(40px) saturate(160%);
+-webkit-backdrop-filter:blur(40px) saturate(160%);
+border:1px solid rgba(255,255,255,0.18);
+box-shadow:
+0 10px 40px rgba(0,0,0,0.6),
+inset 0 1px 0 rgba(255,255,255,0.25);
+border-radius:20px;
+}
+
+/* tombol kembali */
+.mac-back{
+background:rgba(255,255,255,0.12);
+backdrop-filter:blur(20px);
+border:1px solid rgba(255,255,255,0.18);
+padding:6px 14px;
+border-radius:999px;
+font-size:14px;
+transition:.25s;
+}
+.mac-back:hover{
+background:rgba(255,255,255,0.25);
+transform:translateY(-1px);
+}
+
+/* image */
+.img-mac{
+border-radius:16px;
+border:1px solid rgba(255,255,255,0.2);
+box-shadow:0 15px 35px rgba(0,0,0,0.6);
+transition:.4s;
+}
+.img-mac:hover{transform:scale(1.02);}
+</style>
+</head>
+
+<body>
+
+<div class="max-w-6xl mx-auto p-6">
+
+<!-- Toolbar glass -->
+<div class="glass flex items-center px-4 py-3 mb-6">
+
+<button onclick="window.location.href='index.html'" class="mac-back">
+← Kembali
+</button>
+
+</div>
+
+<!-- layout -->
+<div class="glass p-8">
+
+<div class="grid lg:grid-cols-2 gap-12 items-start">
+
+<!-- kiri: teks -->
+<div>
+<h1 class="text-3xl font-semibold mb-4">Pelayanan UGD</h1>
+
+<p class="text-white/70 mb-4 leading-relaxed">
+Pelayanan UGD Terbatas merupakan pelayanan kegawatdaruratan yang diberikan untuk penanganan awal pasien dengan kondisi darurat medis yang datang pada jam operasional Puskesmas.
+Pelayanan ini bertujuan memberikan pertolongan pertama, stabilisasi kondisi pasien, serta menentukan kebutuhan rujukan ke fasilitas kesehatan yang memiliki layanan gawat darurat 24 jam.
+UGD terbatas tidak beroperasi selama 24 jam dan hanya melayani kasus kegawatdaruratan ringan hingga sedang sesuai kemampuan fasilitas dan tenaga kesehatan yang tersedia.
+</p>
+
+<ul class="list-disc ml-5 text-white/80 space-y-2">
+<li>Triage dan Penilaian Kegawatdaruratan</li>
+<li>Penanganan Kegawatdaruratan Dasar</li>
+<li>Tindakan Medis Darurat Sederhana</li>
+<li>Stabilisasi Pasien</li>
+<li>Rujukan Kegawatdaruratan</li>
+</ul>
+
+</div>
+
+<!-- kanan: foto -->
+<div class="space-y-5">
+
+<img src="ugd1.jpg" class="img-mac w-full h-40 object-cover">
+<img src="ugd2.jpg" class="img-mac w-full h-40 object-cover">
+<img src="ugd3.jpg" class="img-mac w-full h-40 object-cover">
+
+</div>
+
+</div>
+</div>
+
+</div>
+
+</body>
+</html>

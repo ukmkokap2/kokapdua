@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manajemen Puskesmas (Tata Usaha) - Puskesmas Kokap II</title>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+body{
+background:
+radial-gradient(circle at 20% 10%, rgba(255,255,255,0.08), transparent 40%),
+radial-gradient(circle at 80% 0%, rgba(255,255,255,0.06), transparent 40%),
+linear-gradient(180deg,#0b0b12,#050508);
+font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
+color:white;
+}
+
+/* glass */
+.glass{
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(40px) saturate(160%);
+-webkit-backdrop-filter:blur(40px) saturate(160%);
+border:1px solid rgba(255,255,255,0.18);
+box-shadow:
+0 10px 40px rgba(0,0,0,0.6),
+inset 0 1px 0 rgba(255,255,255,0.25);
+border-radius:20px;
+}
+
+/* tombol kembali */
+.mac-back{
+background:rgba(255,255,255,0.12);
+backdrop-filter:blur(20px);
+border:1px solid rgba(255,255,255,0.18);
+padding:6px 14px;
+border-radius:999px;
+font-size:14px;
+transition:.25s;
+}
+.mac-back:hover{
+background:rgba(255,255,255,0.25);
+transform:translateY(-1px);
+}
+
+/* image */
+.img-mac{
+border-radius:16px;
+border:1px solid rgba(255,255,255,0.2);
+box-shadow:0 15px 35px rgba(0,0,0,0.6);
+transition:.4s;
+}
+.img-mac:hover{transform:scale(1.02);}
+</style>
+</head>
+
+<body>
+
+<div class="max-w-6xl mx-auto p-6">
+
+<!-- Toolbar glass -->
+<div class="glass flex items-center px-4 py-3 mb-6">
+
+<button onclick="window.location.href='index.html'" class="mac-back">
+← Kembali
+</button>
+
+</div>
+
+<!-- layout -->
+<div class="glass p-8">
+
+<div class="grid lg:grid-cols-2 gap-12 items-start">
+
+<!-- kiri: teks -->
+<div>
+<h1 class="text-3xl font-semibold mb-4">Manajemen Puskesmas (Tata Usaha)</h1>
+
+<p class="text-white/70 mb-4 leading-relaxed">
+Manajemen Puskesmas melalui unit Tata Usaha merupakan fungsi administrasi dan pengelolaan yang mendukung kelancaran operasional pelayanan kesehatan. Tata usaha berperan dalam pengelolaan administrasi, kepegawaian, keuangan, sarana prasarana, serta sistem informasi untuk memastikan pelayanan Puskesmas berjalan efektif, tertib, dan sesuai ketentuan yang berlaku.
+
+Pelayanan administrasi dilaksanakan pada jam operasional Puskesmas dan mendukung seluruh kegiatan pelayanan kesehatan di dalam maupun luar gedung.
+</p>
+
+<ul class="list-disc ml-5 text-white/80 space-y-2">
+<li>Administrasi Umum dan Perkantoran</li>
+<li>Kepegawaian</li>
+<li>Pengelolaan Keuangan</li>
+<li>Pengelolaan Sarana dan Prasarana</li>
+<li>Sistem Informasi dan Pelaporan</li>
+</ul>
+
+</div>
+
+<!-- kanan: foto -->
+<div class="space-y-5">
+
+<img src="tu1.jpg" class="img-mac w-full h-40 object-cover">
+<img src="tu2.jpg" class="img-mac w-full h-40 object-cover">
+<img src="tu3.jpg" class="img-mac w-full h-40 object-cover">
+
+</div>
+
+</div>
+</div>
+
+</div>
+
+</body>
+</html>
