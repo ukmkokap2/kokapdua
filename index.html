@@ -7,33 +7,103 @@
 
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://unpkg.com/lucide@latest"></script>
 
 <style>
+
+.contact-btn{
+display:flex;
+align-items:center;
+justify-content:center;
+gap:10px;
+padding:12px;
+font-weight:600;
+border-radius:14px;
+transition:.25s;
+backdrop-filter:blur(20px);
+}
+
+.contact-btn:hover{
+transform:translateY(-2px);
+}
+
+.contact-btn:active{
+transform:scale(.96);
+}
+
+/* ===== ROOT ===== */
+:root{ color-scheme: light dark; }
+
+/* ===== BODY ===== */
 body{
 font-family:'Space Grotesk',sans-serif;
-background:radial-gradient(circle at 20% 10%, #1a1a2e, #090912 70%);
-color:white;
+background:linear-gradient(180deg,#f5f6fa,#eef1f6);
+color:#1c1c1e;
 overflow-x:hidden;
+transition:.4s ease;
+}
+
+.dark body{
+background:linear-gradient(180deg,#0b0b12,#050508);
+color:white;
+}
+
+/* cursor light effect */
+body::after{
+content:"";
+position:fixed;
+inset:0;
+pointer-events:none;
+background:radial-gradient(circle at var(--x,50%) var(--y,50%), rgba(0,0,0,0.08), transparent 35%);
+transition:opacity .25s ease;
+}
+
+.dark body::after{
+background:radial-gradient(circle at var(--x,50%) var(--y,50%), rgba(255,255,255,0.10), transparent 35%);
 }
 
 /* glass */
 .glass{
-background:rgba(255,255,255,0.06);
-backdrop-filter:blur(30px);
-border:1px solid rgba(255,255,255,0.12);
-box-shadow:0 10px 40px rgba(0,0,0,0.45);
+background:rgba(255,255,255,0.65);
+backdrop-filter:blur(26px) saturate(180%);
+border:1px solid rgba(255,255,255,0.9);
+box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+.dark .glass{
+background:rgba(30,30,35,0.55);
+border:1px solid rgba(255,255,255,0.08);
+box-shadow:0 10px 30px rgba(0,0,0,0.45);
 }
 
-/* navbar button */
+/* navbar scroll effect */
+nav{ transition:.35s ease; }
+nav.scrolled{
+background:rgba(255,255,255,0.85);
+backdrop-filter:blur(30px);
+box-shadow:0 10px 25px rgba(0,0,0,0.08);
+}
+.dark nav.scrolled{ background:rgba(25,25,30,0.75); }
+
+/* button apple style */
 .mac-btn{
-background:rgba(255,255,255,0.08);
-padding:8px 16px;
+background:white;
 border-radius:12px;
+border:1px solid rgba(0,0,0,0.06);
+padding:8px 14px;
 transition:.25s;
+display:flex;
+align-items:center;
+justify-content:center;
 }
 .mac-btn:hover{
-background:rgba(255,255,255,0.18);
 transform:translateY(-1px);
+box-shadow:0 6px 14px rgba(0,0,0,0.12);
+}
+.mac-btn:active{ transform:scale(.95); }
+.dark .mac-btn{
+background:rgba(255,255,255,0.08);
+border:1px solid rgba(255,255,255,0.12);
 }
 
 /* hero slider */
@@ -43,6 +113,8 @@ width:100%;
 aspect-ratio:16/9;
 overflow:hidden;
 border-radius:28px;
+border:1px solid rgba(0,0,0,0.08);
+box-shadow:0 15px 40px rgba(0,0,0,0.12);
 }
 .slide{
 position:absolute;
@@ -50,18 +122,15 @@ width:100%;
 height:100%;
 object-fit:cover;
 opacity:0;
-transform:scale(1.08);
+transform:scale(1.05);
 transition:opacity 1s ease, transform 6s ease;
 }
-.slide.active{
-opacity:1;
-transform:scale(1);
-}
+.slide.active{ opacity:1; transform:scale(1); }
 
-/* cards */
+/* card */
 .card{
-background:linear-gradient(145deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02));
-border:1px solid rgba(255,255,255,0.12);
+background:linear-gradient(180deg,#ffffff,#f2f3f7);
+border:1px solid rgba(0,0,0,0.06);
 border-radius:22px;
 height:110px;
 display:flex;
@@ -69,165 +138,218 @@ flex-direction:column;
 align-items:center;
 justify-content:center;
 gap:8px;
-transition:.3s;
 cursor:pointer;
-position:relative;
-overflow:hidden;
+transition:.25s;
+box-shadow:0 6px 18px rgba(0,0,0,0.08);
 }
 .card:hover{
-transform:translateY(-6px);
-box-shadow:0 15px 35px rgba(0,0,0,0.5);
+transform:translateY(-4px);
+box-shadow:0 14px 30px rgba(0,0,0,0.15);
 }
-.card::after{
-content:"";
+.dark .card{
+background:linear-gradient(180deg,#1c1c1e,#121214);
+border:1px solid rgba(255,255,255,0.08);
+}
+
+/* ===== ANNOUNCEMENT SLIDESHOW ===== */
+#announcementSlider{
+position:relative;
+height:100%;
+}
+
+.announcement-slide{
 position:absolute;
-width:120%;
-height:120%;
-background:radial-gradient(circle,rgba(255,255,255,0.15),transparent 60%);
+inset:0;
 opacity:0;
+transition:opacity .8s ease;
+display:flex;
+align-items:flex-start;
+}
+
+.announcement-slide.active{
+opacity:1;
+}
+/* indikator dot slideshow */
+.announcement-dots{
+position:absolute;
+bottom:10px;
+left:50%;
+transform:translateX(-50%);
+display:flex;
+gap:6px;
+}
+
+.announcement-dots span{
+width:6px;
+height:6px;
+border-radius:50%;
+background:rgba(0,0,0,0.25);
 transition:.3s;
 }
-.card:hover::after{opacity:1;}
 
-.icon{
-font-size:26px;
+.dark .announcement-dots span{
+background:rgba(255,255,255,0.35);
 }
 
+.announcement-dots span.active{
+width:16px;
+border-radius:6px;
+background:#007aff;
+}
 /* bottom sheet */
 .sheet-container{
-position:fixed;
-inset:0;
-display:flex;
-align-items:flex-end;
-justify-content:center;
+position:fixed; inset:0;
+display:flex; align-items:flex-end; justify-content:center;
 background:rgba(0,0,0,0.35);
-backdrop-filter:blur(12px);
-opacity:0;
-pointer-events:none;
-transition:.3s;
-z-index:100;
+backdrop-filter:blur(20px);
+opacity:0; pointer-events:none;
+transition:.3s; z-index:100;
 }
-.sheet-container.show{
-opacity:1;
-pointer-events:auto;
-}
+.sheet-container.show{ opacity:1; pointer-events:auto; }
 .sheet{
-width:100%;
-max-width:520px;
-background:rgba(28,28,30,0.95);
-backdrop-filter:blur(40px);
+width:100%; max-width:520px;
+background:rgba(255,255,255,0.95);
 border-radius:28px 28px 0 0;
 padding:20px 22px 28px;
-max-height:85vh;
-overflow:auto;
+max-height:85vh; overflow:auto;
 transform:translateY(100%);
-transition:transform .35s cubic-bezier(.25,.8,.25,1);
+transition:.35s cubic-bezier(.25,.8,.25,1);
 }
-.sheet-container.show .sheet{transform:translateY(0);}
+.dark .sheet{ background:rgba(40,40,45,0.92); }
+.sheet-container.show .sheet{ transform:translateY(0); }
+
 .handle{
-width:50px;height:5px;background:rgba(255,255,255,.4);
+width:50px;height:5px;background:rgba(0,0,0,.3);
 border-radius:999px;margin:0 auto 14px;
 }
 
-/* fade animation */
-.fade-in{
-animation:fade .6s ease forwards;
-opacity:0;
-}
-@keyframes fade{
-to{opacity:1; transform:none}
-from{opacity:0; transform:translateY(8px)}
-}
 </style>
 </head>
 
 <body>
 
 <!-- NAVBAR -->
-<nav class="fixed top-0 w-full glass z-50">
-<div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+<nav class="fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-7xl glass rounded-2xl z-50">
+<div class="px-6 py-4 flex justify-between items-center">
 <div class="flex items-center gap-3">
 <img src="logopkm.png" class="w-10 h-10 object-contain">
 <span class="font-semibold text-lg">Puskesmas Kokap II</span>
 </div>
-<button onclick="openSheet('contact')" class="mac-btn">Kontak</button>
+
+<div class="flex items-center gap-2">
+<button onclick="toggleTheme()" class="mac-btn" id="themeToggle">
+<i data-lucide="sun"></i>
+</button>
+<button onclick="openSheet()" class="mac-btn">Kontak</button>
+</div>
 </div>
 </nav>
 
 <!-- HERO -->
-<section class="pt-24 pb-12 fade-in">
+<section class="pt-32 pb-12">
 <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-10 items-center">
-<div>
+
+<div class="flex flex-col h-full">
 <h1 class="text-5xl font-bold leading-tight">Bersama Pasti Bisa</h1>
-<p class="mt-4 text-white/70">Menjadi Institusi yang Profesional untuk Mewujudkan Masyarakat sehat dan mandiri di Wialayah Puskesmas Kokap II.</p>
+<p class="mt-4 opacity-70">
+Menjadi Institusi yang Profesional untuk Mewujudkan Masyarakat sehat dan mandiri di Wilayah UPT Puskesmas Kokap II.
+</p>
+
+<div class="glass rounded-2xl p-4 mt-5 flex flex-col flex-grow relative overflow-hidden">
+
+<div id="announcementSlider">
+
+<p class="announcement-slide active">
+📢 Jadwal Pelayanan Ramadhan akan disesuaikan. Silakan cek informasi terbaru melalui WhatsApp atau Instagram kami.
+</p>
+
+<p class="announcement-slide">
+📢 Pelayanan Poli Umum buka:
+Senin – Kamis pukul 07.30 – 13.00 WIB.
+Jumat pukul 07.30 – 11.00 WIB.
+Sabtu pukul 07.30 – 11.30 WIB.
+</p>
+
+<p class="announcement-slide">
+📢 Imunisasi balita tersedia setiap hari Selasa minggu kedua.
+</p>
+<div class="announcement-dots">
+<span class="active"></span>
+<span></span>
+<span></span>
 </div>
+</div>
+</div>
+</div>
+
 <div class="glass hero-slider">
 <img src="foto1.jpg" class="slide active">
 <img src="foto2.png" class="slide">
 <img src="foto3.jpg" class="slide">
 </div>
+
 </div>
 </section>
 
 <!-- LAYANAN -->
-<section class="pb-16 fade-in">
+<section class="pb-16">
 <div class="max-w-7xl mx-auto px-6">
 <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
 
-<div class="card" onclick="openSheet('ugd')">
-<div class="icon">🚑</div>
-<div>UGD</div>
-</div>
-
-<div class="card" onclick="openSheet('umum')">
-<div class="icon">🩺</div>
-<div>Pelayanan Umum</div>
-</div>
-
-<div class="card" onclick="openSheet('kia')">
-<div class="icon">🤰</div>
-<div>KIA</div>
-</div>
-
-<div class="card" onclick="openSheet('gigi')">
-<div class="icon">😁</div>
-<div>Gigi & Mulut</div>
-</div>
-
-<div class="card" onclick="openSheet('gizi')">
-<div class="icon">🥗</div>
-<div>Konsultasi Gizi</div>
-</div>
-
-<div class="card" onclick="openSheet('lingkungan')">
-<div class="icon">🌿</div>
-<div>Kesehatan Lingkungan</div>
-</div>
-
-<div class="card" onclick="openSheet('promosi')">
-<div class="icon">📢</div>
-<div>Promosi Kesehatan</div>
-</div>
-
-<div class="card" onclick="openSheet('manajemen')">
-<div class="icon">📋</div>
-<div>Administrasi</div>
-</div>
+<div class="card" onclick="window.location.href='ugd.html'"><i data-lucide="ambulance"></i><div>UGD</div></div>
+<div class="card" onclick="window.location.href='umum.html'"><i data-lucide="stethoscope"></i><div>Pelayanan Umum</div></div>
+<div class="card" onclick="window.location.href='kia.html'"><i data-lucide="baby"></i><div>Pelayanan KIA</div></div>
+<div class="card" onclick="window.location.href='gigi.html'"><i data-lucide="smile"></i><div>Gigi & Mulut</div></div>
+<div class="card" onclick="window.location.href='gizi.html'"><i data-lucide="salad"></i><div>Konsultasi Gizi</div></div>
+<div class="card" onclick="window.location.href='lingkungan.html'"><i data-lucide="leaf"></i><div>Kesehatan Lingkungan</div></div>
+<div class="card" onclick="window.location.href='promkes.html'"><i data-lucide="megaphone"></i><div>Promosi Kesehatan</div></div>
+<div class="card" onclick="window.location.href='tu.html'"><i data-lucide="clipboard-list"></i><div>Administrasi</div></div>
 
 </div>
 </div>
 </section>
 
-<!-- BOTTOM SHEET -->
+<!-- CONTACT -->
 <div id="sheet" class="sheet-container" onclick="closeSheet(event)">
-<div class="sheet" id="sheetBox">
+<div class="sheet">
 <div class="handle"></div>
-<div id="sheetContent"></div>
+
+<h3 class="text-xl font-semibold text-center mb-4">Hubungi Kami</h3>
+
+<a href="https://wa.me/628112641555" target="_blank"
+class="contact-btn w-full text-white bg-green-500 rounded-xl mb-3">
+<i class="fa-brands fa-whatsapp"></i>
+<span>WhatsApp</span>
+</a>
+
+<a href="https://instagram.com/kokap.dua" target="_blank"
+class="contact-btn w-full text-white rounded-xl mb-3"
+style="background:linear-gradient(90deg,#ff0069,#ff7a00,#ffd600);">
+<i class="fa-brands fa-instagram"></i>
+<span>Instagram</span>
+</a>
+
+<a href="https://tiktok.com/@kokapdua" target="_blank"
+class="contact-btn w-full text-white bg-black rounded-xl">
+<i class="fa-brands fa-tiktok"></i>
+<span>TikTok</span>
+</a>
+
 </div>
 </div>
 
 <script>
-// slider
+// cursor light effect
+document.addEventListener("mousemove",e=>{
+document.body.style.setProperty("--x",e.clientX+"px");
+document.body.style.setProperty("--y",e.clientY+"px");
+});
+
+// navbar blur
+const nav=document.querySelector("nav");
+window.addEventListener("scroll",()=>nav.classList.toggle("scrolled",window.scrollY>30));
+
+// hero slider
 let i=0;
 const slides=document.querySelectorAll(".slide");
 setInterval(()=>{
@@ -236,47 +358,46 @@ i=(i+1)%slides.length;
 slides[i].classList.add("active");
 },4000);
 
-// content (ringkas premium)
-const content={
-ugd:`<h3 class="text-xl font-semibold mb-4 text-center">UGD Terbatas</h3>
-<p class="text-white/80">Pelayanan kegawatdaruratan dasar seperti luka ringan, asma ringan, dan pertolongan pertama. Kasus berat akan dirujuk.</p>`,
+// announcement slideshow
+const annSlides = document.querySelectorAll("#announcementSlider .announcement-slide");
+const dots = document.querySelectorAll(".announcement-dots span");
+let annIndex = 0;
 
-umum:`<h3 class="text-xl font-semibold mb-4 text-center">Pelayanan Umum</h3>
-<p class="text-white/80">Pemeriksaan kesehatan, konsultasi dokter, pengobatan penyakit umum, dan pemeriksaan laboratorium sederhana.</p>`,
+setInterval(()=>{
+annSlides[annIndex].classList.remove("active");
+dots[annIndex].classList.remove("active");
 
-kia:`<h3 class="text-xl font-semibold mb-4 text-center">Kesehatan Ibu & Anak</h3>
-<p class="text-white/80">Pemeriksaan kehamilan, imunisasi, KB, dan pemantauan tumbuh kembang anak.</p>`,
+annIndex = (annIndex + 1) % annSlides.length;
 
-gigi:`<h3 class="text-xl font-semibold mb-4 text-center">Gigi & Mulut</h3>
-<p class="text-white/80">Pemeriksaan gigi, penambalan, pencabutan sederhana, dan edukasi kesehatan gigi.</p>`,
+annSlides[annIndex].classList.add("active");
+dots[annIndex].classList.add("active");
 
-gizi:`<h3 class="text-xl font-semibold mb-4 text-center">Konsultasi Gizi</h3>
-<p class="text-white/80">Konsultasi gizi keluarga, pencegahan stunting, dan edukasi pola makan sehat.</p>`,
+},5000);
 
-lingkungan:`<h3 class="text-xl font-semibold mb-4 text-center">Kesehatan Lingkungan</h3>
-<p class="text-white/80">Edukasi sanitasi, air bersih, dan pencegahan penyakit berbasis lingkungan.</p>`,
+// contact sheet
+function openSheet(){document.getElementById("sheet").classList.add("show");}
+function closeSheet(e){if(e.target.id==="sheet"){document.getElementById("sheet").classList.remove("show");}}
 
-promosi:`<h3 class="text-xl font-semibold mb-4 text-center">Promosi Kesehatan</h3>
-<p class="text-white/80">Penyuluhan PHBS dan edukasi hidup sehat untuk masyarakat.</p>`,
+// theme toggle
+const savedTheme = localStorage.getItem("theme");
+if(savedTheme==="dark"){ document.documentElement.classList.add("dark"); }
 
-manajemen:`<h3 class="text-xl font-semibold mb-4 text-center">Administrasi</h3>
-<p class="text-white/80">Surat kesehatan, dan rujukan, MoU ( Perjanjian Kerjasama ), Izin penelitian, dll </p>`,
-
-contact:`<h3 class="text-xl font-semibold text-center mb-4">Hubungi Kami</h3>
-<a href="#" class="block py-3 rounded-xl bg-green-500 text-center font-semibold mb-2">WhatsApp</a>
-<a href="#" class="block py-3 rounded-xl bg-pink-500 text-center font-semibold mb-2">Instagram</a>
-<a href="#" class="block py-3 rounded-xl bg-black border border-white/20 text-center font-semibold">TikTok</a>`
-};
-
-function openSheet(type){
-document.getElementById("sheetContent").innerHTML=content[type];
-document.getElementById("sheet").classList.add("show");
+function toggleTheme(){
+document.documentElement.classList.toggle("dark");
+localStorage.setItem("theme",
+document.documentElement.classList.contains("dark") ? "dark" : "light");
+updateIcon();
 }
-function closeSheet(e){
-if(e.target.id==="sheet"){
-document.getElementById("sheet").classList.remove("show");
+
+function updateIcon(){
+const icon=document.querySelector("#themeToggle i");
+icon.setAttribute("data-lucide",
+document.documentElement.classList.contains("dark") ? "moon" : "sun");
+lucide.createIcons();
 }
-}
+
+updateIcon();
+lucide.createIcons();
 </script>
 
 </body>
