@@ -1,6 +1,5 @@
 backend:
   name: git-gateway
-  repo: ukmkokap2/kokapdua
   branch: main
 
 media_folder: "images/uploads"
