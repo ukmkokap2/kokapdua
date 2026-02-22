@@ -12,8 +12,6 @@
 
 <style>
 
-/* ====== (SEMUA CSS ANDA TETAP) ====== */
-
 .contact-btn{
 display:flex;
 align-items:center;
@@ -26,11 +24,18 @@ transition:.25s;
 backdrop-filter:blur(20px);
 }
 
-.contact-btn:hover{ transform:translateY(-2px); }
-.contact-btn:active{ transform:scale(.96); }
+.contact-btn:hover{
+transform:translateY(-2px);
+}
 
+.contact-btn:active{
+transform:scale(.96);
+}
+
+/* ===== ROOT ===== */
 :root{ color-scheme: light dark; }
 
+/* ===== BODY ===== */
 body{
 font-family:'Space Grotesk',sans-serif;
 background:linear-gradient(180deg,#f5f6fa,#eef1f6);
@@ -44,6 +49,7 @@ background:linear-gradient(180deg,#0b0b12,#050508);
 color:white;
 }
 
+/* cursor light effect */
 body::after{
 content:"";
 position:fixed;
@@ -57,6 +63,7 @@ transition:opacity .25s ease;
 background:radial-gradient(circle at var(--x,50%) var(--y,50%), rgba(255,255,255,0.10), transparent 35%);
 }
 
+/* glass */
 .glass{
 background:rgba(255,255,255,0.65);
 backdrop-filter:blur(26px) saturate(180%);
@@ -69,6 +76,7 @@ border:1px solid rgba(255,255,255,0.08);
 box-shadow:0 10px 30px rgba(0,0,0,0.45);
 }
 
+/* navbar scroll effect */
 nav{ transition:.35s ease; }
 nav.scrolled{
 background:rgba(255,255,255,0.85);
@@ -77,6 +85,7 @@ box-shadow:0 10px 25px rgba(0,0,0,0.08);
 }
 .dark nav.scrolled{ background:rgba(25,25,30,0.75); }
 
+/* button apple style */
 .mac-btn{
 background:white;
 border-radius:12px;
@@ -97,7 +106,7 @@ background:rgba(255,255,255,0.08);
 border:1px solid rgba(255,255,255,0.12);
 }
 
-/* hero slider tetap */
+/* hero slider */
 .hero-slider{
 position:relative;
 width:100%;
@@ -142,36 +151,28 @@ background:linear-gradient(180deg,#1c1c1e,#121214);
 border:1px solid rgba(255,255,255,0.08);
 }
 
-/* ===================================================== */
-/* ✅ PERBAIKAN SLIDER PENGUMUMAN (ANTI TERPOTONG MOBILE) */
-/* ===================================================== */
-
+/* ===== ANNOUNCEMENT SLIDESHOW ===== */
 #announcementSlider{
 position:relative;
-min-height:48px;        /* menjaga tinggi minimum */
-padding-bottom:14px;    /* ruang indikator dot */
+height:100%;
 }
 
 .announcement-slide{
 position:absolute;
-top:0;
-left:0;
-width:100%;
+inset:0;
 opacity:0;
-transition:opacity .6s ease;
-line-height:1.45;
-word-wrap:break-word;
+transition:opacity .8s ease;
+display:flex;
+align-items:flex-start;
 }
 
 .announcement-slide.active{
-position:relative;   /* slide aktif menentukan tinggi box */
 opacity:1;
 }
-
-/* indikator dot tetap */
+/* indikator dot slideshow */
 .announcement-dots{
 position:absolute;
-bottom:6px;
+bottom:10px;
 left:50%;
 transform:translateX(-50%);
 display:flex;
@@ -195,15 +196,7 @@ width:16px;
 border-radius:6px;
 background:#007aff;
 }
-
-/* mobile font adjustment */
-@media (max-width:640px){
-  .announcement-slide{
-    font-size:14px;
-  }
-}
-
-/* bottom sheet tetap */
+/* bottom sheet */
 .sheet-container{
 position:fixed; inset:0;
 display:flex; align-items:flex-end; justify-content:center;
@@ -232,3 +225,180 @@ border-radius:999px;margin:0 auto 14px;
 
 </style>
 </head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-7xl glass rounded-2xl z-50">
+<div class="px-6 py-4 flex justify-between items-center">
+<div class="flex items-center gap-3">
+<img src="logopkm.png" class="w-10 h-10 object-contain">
+<span class="font-semibold text-lg">Puskesmas Kokap II</span>
+</div>
+
+<div class="flex items-center gap-2">
+<button onclick="toggleTheme()" class="mac-btn" id="themeToggle">
+<i data-lucide="sun"></i>
+</button>
+<button onclick="openSheet()" class="mac-btn">Kontak</button>
+</div>
+</div>
+</nav>
+
+<!-- HERO -->
+<section class="pt-32 pb-12">
+<div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-10 items-center">
+
+<div class="flex flex-col h-full">
+<h1 class="text-5xl font-bold leading-tight">Bersama Pasti Bisa</h1>
+<p class="mt-4 opacity-70">
+Menjadi Institusi yang Profesional untuk Mewujudkan Masyarakat sehat dan mandiri di Wilayah UPT Puskesmas Kokap II.
+</p>
+
+<div class="glass rounded-2xl p-4 mt-5 flex flex-col flex-grow relative overflow-hidden">
+
+<div id="announcementSlider">
+
+<p class="announcement-slide active">
+📢 Jadwal Pelayanan Ramadhan akan disesuaikan. Silakan cek informasi terbaru melalui WhatsApp atau Instagram kami.
+</p>
+
+<p class="announcement-slide">
+📢 Pelayanan Poli Umum buka:
+Senin – Kamis pukul 07.30 – 13.00 WIB.
+Jumat pukul 07.30 – 11.00 WIB.
+Sabtu pukul 07.30 – 11.30 WIB.
+</p>
+
+<p class="announcement-slide">
+📢 Imunisasi balita tersedia setiap hari Selasa minggu kedua.
+</p>
+<div class="announcement-dots">
+<span class="active"></span>
+<span></span>
+<span></span>
+</div>
+</div>
+</div>
+</div>
+
+<div class="glass hero-slider">
+<img src="foto1.jpg" class="slide active">
+<img src="foto2.png" class="slide">
+<img src="foto3.jpg" class="slide">
+</div>
+
+</div>
+</section>
+
+<!-- LAYANAN -->
+<section class="pb-16">
+<div class="max-w-7xl mx-auto px-6">
+<div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+<div class="card" onclick="window.location.href='ugd.html'"><i data-lucide="ambulance"></i><div>UGD</div></div>
+<div class="card" onclick="window.location.href='umum.html'"><i data-lucide="stethoscope"></i><div>Pelayanan Umum</div></div>
+<div class="card" onclick="window.location.href='kia.html'"><i data-lucide="baby"></i><div>Pelayanan KIA</div></div>
+<div class="card" onclick="window.location.href='gigi.html'"><i data-lucide="smile"></i><div>Gigi & Mulut</div></div>
+<div class="card" onclick="window.location.href='gizi.html'"><i data-lucide="salad"></i><div>Konsultasi Gizi</div></div>
+<div class="card" onclick="window.location.href='lingkungan.html'"><i data-lucide="leaf"></i><div>Kesehatan Lingkungan</div></div>
+<div class="card" onclick="window.location.href='promkes.html'"><i data-lucide="megaphone"></i><div>Promosi Kesehatan</div></div>
+<div class="card" onclick="window.location.href='tu.html'"><i data-lucide="clipboard-list"></i><div>Administrasi</div></div>
+
+</div>
+</div>
+</section>
+
+<!-- CONTACT -->
+<div id="sheet" class="sheet-container" onclick="closeSheet(event)">
+<div class="sheet">
+<div class="handle"></div>
+
+<h3 class="text-xl font-semibold text-center mb-4">Hubungi Kami</h3>
+
+<a href="https://wa.me/628112641555" target="_blank"
+class="contact-btn w-full text-white bg-green-500 rounded-xl mb-3">
+<i class="fa-brands fa-whatsapp"></i>
+<span>WhatsApp</span>
+</a>
+
+<a href="https://instagram.com/kokap.dua" target="_blank"
+class="contact-btn w-full text-white rounded-xl mb-3"
+style="background:linear-gradient(90deg,#ff0069,#ff7a00,#ffd600);">
+<i class="fa-brands fa-instagram"></i>
+<span>Instagram</span>
+</a>
+
+<a href="https://tiktok.com/@kokapdua" target="_blank"
+class="contact-btn w-full text-white bg-black rounded-xl">
+<i class="fa-brands fa-tiktok"></i>
+<span>TikTok</span>
+</a>
+
+</div>
+</div>
+
+<script>
+// cursor light effect
+document.addEventListener("mousemove",e=>{
+document.body.style.setProperty("--x",e.clientX+"px");
+document.body.style.setProperty("--y",e.clientY+"px");
+});
+
+// navbar blur
+const nav=document.querySelector("nav");
+window.addEventListener("scroll",()=>nav.classList.toggle("scrolled",window.scrollY>30));
+
+// hero slider
+let i=0;
+const slides=document.querySelectorAll(".slide");
+setInterval(()=>{
+slides[i].classList.remove("active");
+i=(i+1)%slides.length;
+slides[i].classList.add("active");
+},4000);
+
+// announcement slideshow
+const annSlides = document.querySelectorAll("#announcementSlider .announcement-slide");
+const dots = document.querySelectorAll(".announcement-dots span");
+let annIndex = 0;
+
+setInterval(()=>{
+annSlides[annIndex].classList.remove("active");
+dots[annIndex].classList.remove("active");
+
+annIndex = (annIndex + 1) % annSlides.length;
+
+annSlides[annIndex].classList.add("active");
+dots[annIndex].classList.add("active");
+
+},5000);
+
+// contact sheet
+function openSheet(){document.getElementById("sheet").classList.add("show");}
+function closeSheet(e){if(e.target.id==="sheet"){document.getElementById("sheet").classList.remove("show");}}
+
+// theme toggle
+const savedTheme = localStorage.getItem("theme");
+if(savedTheme==="dark"){ document.documentElement.classList.add("dark"); }
+
+function toggleTheme(){
+document.documentElement.classList.toggle("dark");
+localStorage.setItem("theme",
+document.documentElement.classList.contains("dark") ? "dark" : "light");
+updateIcon();
+}
+
+function updateIcon(){
+const icon=document.querySelector("#themeToggle i");
+icon.setAttribute("data-lucide",
+document.documentElement.classList.contains("dark") ? "moon" : "sun");
+lucide.createIcons();
+}
+
+updateIcon();
+lucide.createIcons();
+</script>
+
+</body>
+</html>
