@@ -1,0 +1,18 @@
+backend:
+  name: github
+  repo: ukmkokap2/kokapdua
+  branch: main
+
+media_folder: "images/uploads"
+public_folder: "/images/uploads"
+
+collections:
+  - name: "berita"
+    label: "Berita"
+    folder: "_posts"
+    create: true
+    fields:
+      - { label: "Judul", name: "title", widget: "string" }
+      - { label: "Tanggal", name: "date", widget: "datetime" }
+      - { label: "Gambar", name: "image", widget: "image" }
+      - { label: "Isi", name: "body", widget: "markdown" }
