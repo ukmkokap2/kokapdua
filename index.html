@@ -223,7 +223,19 @@ transition:.35s cubic-bezier(.25,.8,.25,1);
 width:50px;height:5px;background:rgba(0,0,0,.3);
 border-radius:999px;margin:0 auto 14px;
 }
+/* smooth iOS feel */
+#announcementSlider{
+touch-action: pan-y;
+}
 
+.announcement-slide{
+transition: opacity .45s ease, transform .45s ease;
+transform: translateX(10px);
+}
+
+.announcement-slide.active{
+transform: translateX(0);
+}
 </style>
 </head>
 
@@ -362,18 +374,80 @@ slides[i].classList.add("active");
 // announcement slideshow
 const annSlides = document.querySelectorAll("#announcementSlider .announcement-slide");
 const dots = document.querySelectorAll(".announcement-dots span");
+const slider = document.getElementById("announcementSlider");
+
 let annIndex = 0;
+let annTimer;
+let startX = 0;
+let isTouching = false;
 
-setInterval(()=>{
-annSlides[annIndex].classList.remove("active");
-dots[annIndex].classList.remove("active");
+function showSlide(index){
+  annSlides.forEach((s,i)=>{
+    s.classList.remove("active");
+    dots[i].classList.remove("active");
+  });
 
-annIndex = (annIndex + 1) % annSlides.length;
+  annSlides[index].classList.add("active");
+  dots[index].classList.add("active");
+}
 
-annSlides[annIndex].classList.add("active");
-dots[annIndex].classList.add("active");
+function nextSlide(){
+  annIndex = (annIndex + 1) % annSlides.length;
+  showSlide(annIndex);
+}
 
-},5000);
+function prevSlide(){
+  annIndex = (annIndex - 1 + annSlides.length) % annSlides.length;
+  showSlide(annIndex);
+}
+
+function startAuto(){
+  annTimer = setInterval(nextSlide,5000);
+}
+
+function stopAuto(){
+  clearInterval(annTimer);
+}
+
+/* auto start */
+startAuto();
+
+/* pause saat disentuh */
+slider.addEventListener("touchstart", e=>{
+  startX = e.touches[0].clientX;
+  isTouching = true;
+  stopAuto();
+});
+
+slider.addEventListener("touchend", e=>{
+  if(!isTouching) return;
+
+  let endX = e.changedTouches[0].clientX;
+  let diff = startX - endX;
+
+  if(Math.abs(diff) > 40){
+    if(diff > 0) nextSlide();
+    else prevSlide();
+  }
+
+  isTouching = false;
+  startAuto();
+});
+
+/* support swipe mouse di desktop */
+slider.addEventListener("mousedown", e=>{
+  startX = e.clientX;
+  stopAuto();
+});
+
+slider.addEventListener("mouseup", e=>{
+  let diff = startX - e.clientX;
+  if(Math.abs(diff) > 40){
+    if(diff > 0) nextSlide();
+    else prevSlide();
+  }
+  startAuto();
+});
 
 // contact sheet
 function openSheet(){document.getElementById("sheet").classList.add("show");}
