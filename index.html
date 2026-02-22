@@ -485,10 +485,32 @@ updateIcon();
 lucide.createIcons();
 </script>
 <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script>
+async function loadBerita() {
+  const res = await fetch("data/berita.json");
+  const berita = await res.json();
+
+  const container = document.getElementById("berita-container");
+
+  berita.reverse().forEach(item => {
+    container.innerHTML += `
+      <div style="margin-bottom:30px">
+        <h2>${item.title}</h2>
+        <small>${item.date}</small><br>
+        ${item.image ? `<img src="${item.image}" style="max-width:100%;margin:10px 0">` : ""}
+        <p>${item.content.substring(0,150)}...</p>
+      </div>
+    `;
+  });
+}
+
+loadBerita();
+</script>
 <div id="berita-container"></div>
 
 </body>
 </html>
+
 
 
 
