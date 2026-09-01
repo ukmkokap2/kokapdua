@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Presensi GPS - Puskesmas Kokap II</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+:root{--p:#1264d8;--p2:#0b4fae;--bg:#f5f7fb;--card:#fff;--tx:#172033;--mut:#718096;--bd:#e4e9f0;--ok:#16a34a;--bad:#dc2626;--warn:#d97706;--shadow:0 12px 32px #183b6712}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:14px Inter,Arial,sans-serif}.hide{display:none!important}
+button,input,select{font:inherit}.btn{border:0;border-radius:11px;padding:12px 15px;font-weight:700;cursor:pointer}.primary{background:var(--p);color:#fff}.light{background:#eaf2ff;color:#1254ad}.green{background:var(--ok);color:#fff}.red{background:var(--bad);color:#fff}.gray{background:#eef0f3;color:#374151}
+.login{min-height:100vh;display:grid;place-items:center;padding:20px;background:linear-gradient(135deg,#0b4fae,#1971e8)}.loginbox{width:min(430px,100%);background:white;border-radius:23px;padding:32px;box-shadow:0 25px 70px #001b4833}.logo{width:58px;height:58px;border-radius:17px;background:#eaf2ff;color:var(--p);display:grid;place-items:center;font-size:27px;font-weight:800;margin-bottom:18px}.login h1{margin:0 0 7px;font-size:25px}.muted{color:var(--mut);line-height:1.55}.field{margin:17px 0}.field label{display:block;font-size:12px;font-weight:700;margin-bottom:7px}.field input,.field select{width:100%;padding:13px;border:1px solid var(--bd);border-radius:11px;outline:0}.field input:focus,.field select:focus{border-color:var(--p);box-shadow:0 0 0 3px #1264d813}
+header{background:white;border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:50}.head{max-width:1280px;margin:auto;padding:12px 18px;display:flex;justify-content:space-between;align-items:center;gap:15px}.brand{display:flex;align-items:center;gap:11px;font-weight:800}.brand i{width:41px;height:41px;border-radius:12px;background:var(--p);color:white;display:grid;place-items:center;font-style:normal}.user{display:flex;align-items:center;gap:10px}.avatar{width:38px;height:38px;border-radius:50%;background:#dceaff;color:#1254ad;display:grid;place-items:center;font-weight:800}.wrap{max-width:1280px;margin:auto;padding:23px 18px}.top{display:flex;justify-content:space-between;align-items:end;margin-bottom:19px}.top h1{margin:0 0 5px;font-size:24px}.grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}.card{background:var(--card);border:1px solid var(--bd);border-radius:17px;padding:19px;box-shadow:var(--shadow)}.title{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}.title h2{font-size:16px;margin:0}.pill{padding:6px 9px;border-radius:20px;font-size:11px;font-weight:700}.ok{background:#dcfce7;color:#166534}.bad{background:#fee2e2;color:#991b1b}.wait{background:#fef3c7;color:#92400e}.notice{padding:12px 14px;border-radius:11px;background:#edf5ff;color:#164e9c;margin-bottom:16px}.notice.error{background:#fff0f0;color:#a61b1b}.infos{display:grid;grid-template-columns:1fr 1fr;gap:10px}.info{padding:12px;background:#f8fafc;border:1px solid var(--bd);border-radius:11px}.info small{display:block;color:var(--mut);font-size:10px;margin-bottom:5px}.info b{font-size:13px}.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:13px}.map{height:345px;border-radius:13px;overflow:hidden}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}.stat{background:#f8fafc;border:1px solid var(--bd);border-radius:12px;padding:13px}.stat small{color:var(--mut)}.stat b{display:block;font-size:23px;margin-top:6px}.table{overflow:auto}table{width:100%;min-width:720px;border-collapse:collapse}th,td{text-align:left;padding:11px 9px;border-bottom:1px solid var(--bd);font-size:12px}th{font-size:10px;color:var(--mut);text-transform:uppercase}.toolbar{display:flex;gap:8px;flex-wrap:wrap}.toolbar input,.toolbar select{padding:10px;border:1px solid var(--bd);border-radius:10px}.footer{text-align:center;color:#8993a4;font-size:11px;padding:25px}
+.form-inline{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:10px;align-items:end;margin-bottom:15px}
+@media(max-width:850px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.top{align-items:start;flex-direction:column}.form-inline{grid-template-columns:1fr}}@media(max-width:520px){.wrap{padding:16px 12px}.card{padding:14px}.actions,.infos{grid-template-columns:1fr}.user span{display:none}.map{height:280px}}
+</style>
+</head>
+<body>
+<section id="login" class="login">
+  <div class="loginbox">
+    <div class="logo">✓</div>
+    <h1>Presensi GPS</h1>
+    <p class="muted">Presensi pegawai berbasis lokasi.</p>
+    <div class="field"><label>ID / NIP Pegawai</label><input id="uid" placeholder="Masukkan NIP / ID"></div>
+    <div class="field"><label>Password</label><input id="pass" type="password" placeholder="Password"></div>
+    <button class="btn primary" style="width:100%" onclick="doLogin()">Masuk</button>
+  </div>
+</section>
+
+<div id="app" class="hide">
+  <header>
+    <div class="head">
+      <div class="brand"><i>✓</i><div>Presensi GPS<small style="display:block;color:#8993a4;font-size:10px;font-weight:500">Sistem Presensi Pegawai</small></div></div>
+      <div class="user"><span><b id="uname"></b><small style="display:block;color:#8993a4" id="urole">Pegawai</small></span><div class="avatar" id="ava">P</div><button class="btn gray" onclick="logout()">Keluar</button></div>
+    </div>
+  </header>
+  
+  <main class="wrap">
+    <div class="top">
+      <div><h1 id="hello">Dashboard</h1><span class="muted">Pastikan GPS aktif sebelum melakukan presensi.</span></div>
+      <b id="clock"></b>
+    </div>
+    
+    <div id="notice" class="notice">Klik <b>Periksa Lokasi</b> untuk memvalidasi posisi Anda.</div>
+    
+    <div class="grid">
+      <section class="card">
+        <div class="title"><h2>📍 Verifikasi Lokasi</h2><span id="locStatus" class="pill wait">Belum dicek</span></div>
+        <div class="infos">
+          <div class="info"><small>Latitude</small><b id="lat">-</b></div>
+          <div class="info"><small>Longitude</small><b id="lng">-</b></div>
+          <div class="info"><small>Akurasi</small><b id="acc">-</b></div>
+          <div class="info"><small>Jarak ke kantor</small><b id="dist">-</b></div>
+        </div>
+        <button class="btn light" style="width:100%;margin-top:12px" onclick="locate()">🎯 Periksa Lokasi Sekarang</button>
+        <div class="actions">
+          <button class="btn green" onclick="attendance('Masuk')">🟢 Presensi Masuk</button>
+          <button class="btn red" onclick="attendance('Pulang')">🔴 Presensi Pulang</button>
+        </div>
+        <p class="muted" style="font-size:11px;margin:12px 0 0">Validasi menggunakan koordinat GPS dan radius kantor yang ditentukan admin.</p>
+      </section>
+      <section class="card"><div class="title"><h2>🗺️ Peta Lokasi</h2></div><div id="map" class="map"></div></section>
+    </div>
+
+    <section class="card" style="margin-top:18px">
+      <div class="title"><h2>📊 Riwayat Saya</h2><button class="btn light" onclick="exportMine()">📥 CSV</button></div>
+      <div class="stats">
+        <div class="stat"><small>Hari</small><b id="days">0</b></div>
+        <div class="stat"><small>Masuk</small><b id="ins">0</b></div>
+        <div class="stat"><small>Pulang</small><b id="outs">0</b></div>
+        <div class="stat"><small>Radius</small><b id="radius">-</b></div>
+      </div>
+      <div class="table">
+        <table>
+          <thead><tr><th>Tanggal</th><th>Waktu</th><th>Jenis</th><th>Jarak</th><th>Koordinat</th><th>Sumber</th></tr></thead>
+          <tbody id="mine"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECTION DASHBOARD ADMIN -->
+    <section id="admin" class="card hide" style="margin-top:18px">
+      <!-- FORM TAMBAH PEGAWAI BARU -->
+      <div style="border-bottom: 1px solid var(--bd); padding-bottom: 18px; margin-bottom: 18px;">
+        <div class="title"><h2>➕ Tambah Pegawai Baru</h2></div>
+        <div class="form-inline">
+          <div class="field" style="margin:0"><label>NIP / ID</label><input id="newId" placeholder="Contoh: 199001..."></div>
+          <div class="field" style="margin:0"><label>Nama Lengkap</label><input id="newName" placeholder="Nama Pegawai"></div>
+          <div class="field" style="margin:0"><label>Password</label><input id="newPass" type="password" placeholder="Password"></div>
+          <button class="btn primary" onclick="addEmployee()">+ Simpan Pegawai</button>
+        </div>
+      </div>
+
+      <!-- KELOLA DAFTAR PEGAWAI -->
+      <div style="border-bottom: 1px solid var(--bd); padding-bottom: 18px; margin-bottom: 18px;">
+        <div class="title"><h2>👥 Kelola Data Pegawai</h2></div>
+        <div class="table">
+          <table>
+            <thead><tr><th>NIP / ID</th><th>Nama Pegawai</th><th>Aksi</th></tr></thead>
+            <tbody id="employeeList"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- REKAP PRESENSI -->
+      <div class="title">
+        <h2>👨‍💼 Rekap Presensi Pegawai</h2>
+        <div class="toolbar">
+          <input type="date" id="from">
+          <input type="date" id="to">
+          <button class="btn light" onclick="loadAdmin()">↻ Muat Data</button>
+          <button class="btn primary" onclick="exportAll()">📥 Export CSV</button>
+        </div>
+      </div>
+      <div class="stats">
+        <div class="stat"><small>Total Presensi</small><b id="atotal">0</b></div>
+        <div class="stat"><small>Masuk</small><b id="ain">0</b></div>
+        <div class="stat"><small>Pulang</small><b id="aout">0</b></div>
+        <div class="stat"><small>Pegawai Terdaftar</small><b id="apeople">0</b></div>
+      </div>
+      <div class="table">
+        <table>
+          <thead><tr><th>Tanggal</th><th>Waktu</th><th>ID / NIP</th><th>Nama</th><th>Jenis</th><th>Lat</th><th>Lng</th><th>Jarak</th><th>Sumber</th></tr></thead>
+          <tbody id="all"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  
+  <div class="footer">© 2026 Presensi GPS • Puskesmas Kokap II</div>
+</div>
+
+<script>
+const CONFIG = {
+  officeName: "Puskesmas Kokap II",
+  officeLat: -7.8269,
+  officeLng: 110.1648,
+  radiusMeters: 100,
+  apiUrl: "", // Masukkan Web App URL Google Apps Script Anda di sini
+  adminId: "admin",
+  adminPassword: "admin123"
+};
+
+let user = null, pos = null, map = null, me = null, office = null;
+const $ = id => document.getElementById(id);
+
+function getEmployees() {
+  return JSON.parse(localStorage.getItem('pg_employees') || '[]');
+}
+
+async function doLogin() {
+  let id = $('uid').value.trim(), p = $('pass').value;
+  if (!id || !p) return alert('ID dan password wajib diisi.');
+  
+  // 1. Cek Login Admin
+  if (id === CONFIG.adminId && p === CONFIG.adminPassword) {
+    user = { id, nama: 'Administrator', admin: true };
+    saveSessionAndStart();
+    return;
+  }
+  
+  // 2. Cek Login Pegawai Lokal
+  let emps = getEmployees();
+  let found = emps.find(x => x.id === id && x.password === p);
+  
+  if (found) {
+    user = { id: found.id, nama: found.nama, admin: false };
+    saveSessionAndStart();
+    return;
+  }
+
+  // 3. Cek Login via API Apps Script (jika ada)
+  if (CONFIG.apiUrl) {
+    try {
+      let r = await fetch(CONFIG.apiUrl + '?action=login&id=' + encodeURIComponent(id) + '&pass=' + encodeURIComponent(p));
+      let res = await r.json();
+      if (res.success) {
+        user = { id: res.user.id, nama: res.user.nama, admin: res.user.admin || false };
+        saveSessionAndStart();
+        return;
+      }
+    } catch(e) {}
+  }
+
+  alert('ID atau password salah! (Admin dapat mendaftarkan akun baru di panel admin).');
+}
+
+function saveSessionAndStart() {
+  localStorage.setItem('pg_user', JSON.stringify(user));
+  start();
+}
+
+function logout() {
+  localStorage.removeItem('pg_user');
+  location.reload();
+}
+
+function start() {
+  $('login').classList.add('hide');
+  $('app').classList.remove('hide');
+  $('uname').textContent = user.nama;
+  $('urole').textContent = user.admin ? 'Administrator' : 'Pegawai';
+  $('ava').textContent = user.nama[0].toUpperCase();
+  $('hello').textContent = 'Selamat datang, ' + user.nama + ' 👋';
+  
+  if (user.admin) $('admin').classList.remove('hide');
+  $('radius').textContent = CONFIG.radiusMeters + ' m';
+  
+  updateClock();
+  setInterval(updateClock, 1000);
+  
+  initMap();
+  renderMine();
+  locate();
+  
+  if (user.admin) loadAdmin();
+}
+
+function updateClock() {
+  $('clock').textContent = new Date().toLocaleString('id-ID', { dateStyle: 'full', timeStyle: 'medium' });
+}
+
+function initMap() {
+  if (map) return;
+  map = L.map('map').setView([CONFIG.officeLat, CONFIG.officeLng], 17);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '© OpenStreetMap'
+  }).addTo(map);
+  
+  office = L.marker([CONFIG.officeLat, CONFIG.officeLng]).addTo(map).bindPopup('📍 ' + CONFIG.officeName);
+  L.circle([CONFIG.officeLat, CONFIG.officeLng], {
+    radius: CONFIG.radiusMeters,
+    color: '#1264d8',
+    fillOpacity: 0.08
+  }).addTo(map);
+}
+
+function locate() {
+  if (!navigator.geolocation) return notice('Browser tidak mendukung GPS.', 'error');
+  notice('Membaca lokasi GPS…');
+  
+  navigator.geolocation.getCurrentPosition(
+    p => {
+      pos = p;
+      let { latitude, longitude, accuracy } = p.coords;
+      let d = distance(latitude, longitude, CONFIG.officeLat, CONFIG.officeLng);
+      
+      $('lat').textContent = latitude.toFixed(6);
+      $('lng').textContent = longitude.toFixed(6);
+      $('acc').textContent = Math.round(accuracy) + ' m';
+      $('dist').textContent = Math.round(d) + ' m';
+      
+      let ok = d <= CONFIG.radiusMeters;
+      let s = $('locStatus');
+      s.textContent = ok ? 'Dalam radius' : 'Di luar radius';
+      s.className = 'pill ' + (ok ? 'ok' : 'bad');
+      
+      notice(ok ? '✅ Lokasi valid. Presensi dapat dilakukan.' : '❌ Di luar radius presensi.', ok ? '' : 'error');
+      
+      if (me) me.remove();
+      me = L.marker([latitude, longitude]).addTo(map).bindPopup('📱 Lokasi Anda').openPopup();
+      map.setView([latitude, longitude], 18);
+    },
+    e => {
+      let msg = '❌ Lokasi gagal dibaca.';
+      if (e.code === 1) msg = '❌ Izin lokasi ditolak. Aktifkan GPS/browser location.';
+      notice(msg, 'error');
+    },
+    { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+  );
+}
+
+function distance(lat1, lon1, lat2, lon2) {
+  let R = 6371000;
+  let r = x => x * Math.PI / 180;
+  let dLat = r(lat2 - lat1);
+  let dLon = r(lon2 - lon1);
+  let a = Math.sin(dLat / 2) ** 2 + Math.cos(r(lat1)) * Math.cos(r(lat2)) * Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+async function attendance(type) {
+  if (!pos) return alert('Periksa lokasi terlebih dahulu.');
+  
+  let { latitude, longitude, accuracy } = pos.coords;
+  let d = distance(latitude, longitude, CONFIG.officeLat, CONFIG.officeLng);
+  
+  if (d > CONFIG.radiusMeters) {
+    return alert('Presensi ditolak: Anda berada ' + Math.round(d) + 'm dari lokasi.');
+  }
+  
+  let now = new Date();
+  let data = {
+    id: user.id,
+    nama: user.nama,
+    jenis: type,
+    tanggal: now.toLocaleDateString('id-ID'),
+    waktu: now.toLocaleTimeString('id-ID'),
+    timestamp: now.toISOString(),
+    latitude: latitude.toFixed(6),
+    longitude: longitude.toFixed(6),
+    akurasi: Math.round(accuracy),
+    jarak: Math.round(d)
+  };
+  
+  let local = JSON.parse(localStorage.getItem('pg_data') || '[]');
+  local.unshift(data);
+  localStorage.setItem('pg_data', JSON.stringify(local));
+  
+  let sent = false;
+  if (CONFIG.apiUrl) {
+    try {
+      let r = await fetch(CONFIG.apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'attendance', ...data })
+      });
+      sent = r.ok;
+    } catch (e) {}
+  }
+  
+  alert('Presensi ' + type + ' berhasil.' + (sent ? ' Data terkirim ke Google Sheets.' : ' Data tersimpan di perangkat.'));
+  renderMine();
+  if (user.admin) loadAdmin();
+}
+
+// MANAJEMEN PEGAWAI: TAMBAH PEGAWAI
+async function addEmployee() {
+  let id = $('newId').value.trim();
+  let nama = $('newName').value.trim();
+  let password = $('newPass').value.trim();
+  
+  if (!id || !nama || !password) return alert('Semua kolom data pegawai wajib diisi.');
+  
+  let emps = getEmployees();
+  if (emps.some(e => e.id === id)) return alert('NIP / ID sudah terdaftar!');
+  
+  let newEmp = { id, nama, password };
+  emps.push(newEmp);
+  localStorage.setItem('pg_employees', JSON.stringify(emps));
+  
+  if (CONFIG.apiUrl) {
+    try {
+      await fetch(CONFIG.apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'addEmployee', ...newEmp })
+      });
+    } catch(e) {}
+  }
+  
+  alert('Pegawai ' + nama + ' berhasil ditambahkan!');
+  $('newId').value = '';
+  $('newName').value = '';
+  $('newPass').value = '';
+  loadAdmin();
+}
+
+// MANAJEMEN PEGAWAI: HAPUS PEGAWAI
+function deleteEmployee(id) {
+  if (confirm('Apakah Anda yakin ingin menghapus akun pegawai dengan NIP/ID: ' + id + '?')) {
+    let emps = getEmployees().filter(e => e.id !== id);
+    localStorage.setItem('pg_employees', JSON.stringify(emps));
+    loadAdmin();
+  }
+}
+
+// TAMPILKAN DAFTAR PEGAWAI
+function renderEmployeeList() {
+  let emps = getEmployees();
+  let b = $('employeeList');
+  b.innerHTML = emps.length ? emps.map(e => `
+    <tr>
+      <td>${esc(e.id)}</td>
+      <td>${esc(e.nama)}</td>
+      <td>
+        <button class="btn red" style="padding:5px 10px;font-size:11px" onclick="deleteEmployee('${esc(e.id)}')">🗑️ Hapus</button>
+      </td>
+    </tr>
+  `).join('') : '<tr><td colspan="3" style="text-align:center;color:#8993a4">Belum ada pegawai yang didaftarkan.</td></tr>';
+}
+
+function getLocal() {
+  return JSON.parse(localStorage.getItem('pg_data') || '[]');
+}
+
+function renderMine() {
+  let d = getLocal().filter(x => x.id === user.id);
+  let b = $('mine');
+  
+  b.innerHTML = d.length ? d.map(x => `
+    <tr>
+      <td>${esc(x.tanggal)}</td>
+      <td>${esc(x.waktu)}</td>
+      <td><span class="pill ${x.jenis === 'Masuk' ? 'ok' : 'bad'}">${esc(x.jenis)}</span></td>
+      <td>${esc(x.jarak)} m</td>
+      <td>${esc(x.latitude)}, ${esc(x.longitude)}</td>
+      <td>Perangkat</td>
+    </tr>
+  `).join('') : '<tr><td colspan="6" style="text-align:center;color:#8993a4">Belum ada data.</td></tr>';
+  
+  $('days').textContent = new Set(d.map(x => x.tanggal)).size;
+  $('ins').textContent = d.filter(x => x.jenis === 'Masuk').length;
+  $('outs').textContent = d.filter(x => x.jenis === 'Pulang').length;
+}
+
+async function loadAdmin() {
+  renderEmployeeList(); // Render daftar pegawai
+  
+  let d = getLocal();
+  if (CONFIG.apiUrl) {
+    try {
+      let r = await fetch(CONFIG.apiUrl + '?action=list');
+      if (r.ok) {
+        let j = await r.json();
+        if (Array.isArray(j)) d = j;
+      }
+    } catch (e) {}
+  }
+  
+  let f = $('from').value;
+  let t = $('to').value;
+  
+  if (f) d = d.filter(x => (x.timestamp ? x.timestamp.slice(0, 10) : x.isoDate) >= f);
+  if (t) d = d.filter(x => (x.timestamp ? x.timestamp.slice(0, 10) : x.isoDate) <= t);
+  
+  $('all').innerHTML = d.length ? d.map(x => `
+    <tr>
+      <td>${esc(x.tanggal)}</td>
+      <td>${esc(x.waktu)}</td>
+      <td>${esc(x.id)}</td>
+      <td>${esc(x.nama)}</td>
+      <td><span class="pill ${x.jenis === 'Masuk' ? 'ok' : 'bad'}">${esc(x.jenis)}</span></td>
+      <td>${esc(x.latitude || '-')}</td>
+      <td>${esc(x.longitude || '-')}</td>
+      <td>${esc(x.jarak || '-')} m</td>
+      <td>${esc(x.source || 'Perangkat')}</td>
+    </tr>
+  `).join('') : '<tr><td colspan="9" style="text-align:center;color:#8993a4">Belum ada data presensi.</td></tr>';
+  
+  $('atotal').textContent = d.length;
+  $('ain').textContent = d.filter(x => x.jenis === 'Masuk').length;
+  $('aout').textContent = d.filter(x => x.jenis === 'Pulang').length;
+  $('apeople').textContent = getEmployees().length;
+}
+
+function exportMine() { csv(getLocal().filter(x => x.id === user.id), 'presensi-saya.csv'); }
+function exportAll() { csv(getLocal(), 'presensi-semua.csv'); }
+
+function csv(d, name) {
+  if (!d.length) return alert('Tidak ada data untuk diekspor.');
+  let h = ['ID', 'Nama', 'Jenis', 'Tanggal', 'Waktu', 'Latitude', 'Longitude', 'Akurasi', 'Jarak'];
+  let s = '\ufeff' + [h, ...d.map(x => [x.id, x.nama, x.jenis, x.tanggal, x.waktu, x.latitude, x.longitude, x.akurasi, x.jarak])].map(r => r.map(v => `"${String(v ?? '').replaceAll('"', '""')}"`).join(',')).join('\n');
+  let a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([s], { type: 'text/csv;charset=utf-8' }));
+  a.download = name;
+  a.click();
+}
+
+function notice(t, c = '') {
+  $('notice').innerHTML = t;
+  $('notice').className = 'notice ' + c;
+}
+
+function esc(s) {
+  return String(s ?? '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m]));
+}
+
+(function() {
+  let u = localStorage.getItem('pg_user');
+  if (u) {
+    user = JSON.parse(u);
+    start();
+  }
+})();
+</script>
+</body>
+</html>
